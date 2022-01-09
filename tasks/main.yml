@@ -27,3 +27,8 @@
   vars:
     query: "assets[?ends_with(name, '.x86_64.rpm') == `true`].browser_download_url"
   become: true
+
+- name: create appimage_dir
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/Applications"
+    state: directory
