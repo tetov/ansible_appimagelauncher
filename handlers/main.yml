@@ -10,3 +10,5 @@
   ansible.builtin.command: "ail-cli integrate {{ item.path }}"
   loop: "{{ found_appimages.files }}"
   listen: "integrate appimages"
+  register: out
+  changed_when: '"AppImage has been integrated already" not in out.stdout'
