@@ -1,5 +1,12 @@
 ---
-- name: integrate appimages
-  ansible.builtin.command: "ail-cli {{ appimage_dir }}/*.AppImage"
+- name: find all AppImages
+  ansible.builtin.find:
+    paths: "{{ appimage_dir }}"
+    patterns: "*.AppImage"
+  register: found_appimages
   listen: "integrate appimages"
-  
+
+- name: integrate appimages
+  ansible.builtin.command: "ail-cli integrate {{ item.path }}"
+  loop: "{{ found_appimages.files }}"
+  listen: "integrate appimages"

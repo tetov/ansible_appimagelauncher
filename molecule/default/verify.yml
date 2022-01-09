@@ -1,6 +1,4 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - hosts: all
   gather_facts: false
   vars:
@@ -31,4 +29,8 @@
         url: https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage
         dest: "{{ appimage_dir }}"
         mode: 0755
-      notify: "integrate appimage"
+      notify: "integrate appimages"
+      changed_when: true
+
+  handlers:
+    - include: ../../handlers/main.yml

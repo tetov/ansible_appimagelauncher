@@ -1,7 +1,12 @@
 ---
 - name: install dependency
   ansible.builtin.package:
-    name: python-jmespath
+    name:
+      - python-jmespath
+      # deps missing from rpm
+      - qt5-qtbase
+      - qt5-qtbase-gui
+      - librsvg2
     state: present
   become: true
 
