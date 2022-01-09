@@ -1,0 +1,24 @@
+---
+- name: install dependency
+  ansible.builtin.package:
+    name: python-jmespath
+    state: present
+  become: true
+
+- name: get url of appimagelauncher rpm
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/TheAssassin/AppImageLauncher/releases/tags/v{{ appimagelauncher_ver }}"
+    return_content: true
+    headers:
+      Accept: application/vnd.github.v3+json
+  register: release_body
+  changed_when: false
+
+- name: install using dnf and url
+  ansible.builtin.dnf:
+    name: "{{ release_body.json | community.general.json_query(query) }}"
+    state: present
+    disable_gpg_check: true
+  vars:
+    query: "assets[?ends_with(name, '.x86_64.rpm') == `true`].browser_download_url"
+  become: true

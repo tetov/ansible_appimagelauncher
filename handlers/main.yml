@@ -1,0 +1,5 @@
+---
+- name: integrate appimages
+  ansible.builtin.command: "ail-cli {{ appimage_dir }}/*.AppImage"
+  listen: "integrate appimages"
+  

@@ -1,0 +1,34 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- hosts: all
+  gather_facts: false
+  vars:
+    appimage_dir: /root/Applications
+  tasks:
+    - name: Gather the package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: assert installed
+      ansible.builtin.assert:
+        that: "'appimagelauncher in ansible_facts.packages'"
+        fail_msg: appimagelauncher not installed
+        success_msg: appimagelauncher installed
+
+    - name: test cli tool existence
+      ansible.builtin.command: command -v ail-cli
+      changed_when: false
+
+    - name: create appimage dir for handler test
+      ansible.builtin.file:
+        path: "{{ appimage_dir }}"
+        state: directory
+        mode: 0755
+
+    - name: download example appimage
+      ansible.builtin.get_url:
+        url: https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage
+        dest: "{{ appimage_dir }}"
+        mode: 0755
+      notify: "integrate appimage"
